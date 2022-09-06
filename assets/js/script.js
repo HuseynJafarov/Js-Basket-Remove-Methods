@@ -2,58 +2,50 @@ let basketBtns = document.querySelectorAll("#products .card a");
 let products = [];
 
 if (localStorage.getItem("products") != null) {
-    products = JSON.parse(localStorage.getItem("products"))
+  products = JSON.parse(localStorage.getItem("products"));
 }
 
+basketBtns.forEach((basketBtn) => {
+  basketBtn.addEventListener("click", function (e) {
+    e.preventDefault();
 
-basketBtns.forEach(basketBtn => {
-    basketBtn.addEventListener("click", function (e) {
-        e.preventDefault();
+    // let productPrice =
+    // parseInt(this.parentNode.firstElementChild.nextElementSibling.innerText.substring(1));
+    let productImage =
+      this.parentNode.previousElementSibling.getAttribute("src");
+    let productName = this.parentNode.firstElementChild.innerText;
+    let productDesc = this.previousElementSibling.innerText;
+    let productId = parseInt(
+      this.parentNode.parentNode.getAttribute("data-id")
+    );
 
-        let productImage = this.parentNode.previousElementSibling.getAttribute("src");
-        let productName = this.parentNode.firstElementChild.innerText;
-        let productDesc = this.previousElementSibling.innerText;
-        let productId = parseInt(this.parentNode.parentNode.getAttribute("data-id"));
+    let existProduct = products.find((m) => m.id == productId);
 
-        let existProduct = products.find(m => m.id == productId);
+    if (existProduct != undefined) {
+      existProduct.count += 1;
+    } else {
+      products.push({
+        id: productId,
+        name: productName,
+        desc: productDesc,
+        image: productImage,
+        // price:productPrice,
+        count: 1,
+      });
+    }
 
-        if (existProduct != undefined) {
-            existProduct.count += 1;
-        } else {
-            products.push({
-                id: productId,
-                name: productName,
-                desc: productDesc,
-                image: productImage,
-                count: 1
-            })
-        }
-
-        localStorage.setItem("products", JSON.stringify(products));
-        document.querySelector("sup").innerText = getProductsCount(products);
-
-    })
+    localStorage.setItem("products", JSON.stringify(products));
+    document.querySelector("sup").innerText = getProductsCount(products);
+  });
 });
 
 document.querySelector("sup").innerText = getProductsCount(products);
 
 function getProductsCount(items) {
-    let resultCount = 0;
-    for (const item of items) {
-        resultCount += item.count
-    }
-    return resultCount;
+  let resultCount = 0;
+  for (const item of items) {
+    resultCount += item.count;
+  }
+  return resultCount;
 }
-function DeletePr(){
-    let deletebtns = document.querySelectorAll('.dlt_prd')
-    console.log(deletebtns);
-    deletebtns.forEach((dlt)=>{
-        dlt.addEventListener("click", ()=>{
-            console.log('sala');
-        })
-    })
-}
-DeletePr()
-
-
 
